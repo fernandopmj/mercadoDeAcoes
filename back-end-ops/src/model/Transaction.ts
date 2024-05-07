@@ -1,5 +1,5 @@
 export interface Transaction {
-  id: number;
+  id?: number;
   userId: number;
   stockId: number;
   type: "buy" | "sell";

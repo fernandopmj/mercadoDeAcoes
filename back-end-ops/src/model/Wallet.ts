@@ -1,5 +1,5 @@
 export interface Wallet {
-  id: number;
+  id?: number;
   userId: number;
   stockId: number;
   quantity: number;
