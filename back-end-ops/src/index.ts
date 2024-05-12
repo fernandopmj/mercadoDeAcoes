@@ -16,14 +16,11 @@ app.get("/", (req, res) => {
 });
 
 //Qualquer rota nao tratada.
-app.use((req, res) => {
-  res.status(404);
+app.use((_, res) => {
+  res.status(404).send("Route not found");
 });
 
-const PORT = process.env.PORT || 4000;
-const HOSTNAME = process.env.HOSTNAME || "http://localhost";
-
 // Iniciar o servidor
-app.listen(PORT, () => {
-  console.log(`Server running: ${HOSTNAME}:${PORT}`);
+app.listen(process.env.API_PORT, () => {
+  console.log("🔥 Listening on port " + process.env.API_PORT);
 });

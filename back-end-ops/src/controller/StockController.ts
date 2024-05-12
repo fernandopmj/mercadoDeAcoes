@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import StockRepository from "../repositories/StockRepository";
+import StockRepository from "../Services/StockRepository";
 
 class StockController {
   static createStock(req: Request, res: Response): void {

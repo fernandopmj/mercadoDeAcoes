@@ -8,7 +8,12 @@ const DDL_SCRIPT = `
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL
+    email TEXT UNIQUE NOT NULL,
+    status BOOLEAN NOT NULL,
+    dateCreated INTEGER NOT NULL,
+    dateDesactivate INTEGER,
+    walletId INTEGER,
+    FOREIGN KEY (walletId) REFERENCES Wallet(id)
   );
 
   CREATE TABLE IF NOT EXISTS Stocks (
@@ -26,7 +31,7 @@ const DDL_SCRIPT = `
     type TEXT NOT NULL,
     quantity INTEGER NOT NULL,
     pricePerStock REAL NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    timestamp INTEGER NOT NULL,
     FOREIGN KEY (userId) REFERENCES Users(id),
     FOREIGN KEY (stockId) REFERENCES Stocks(id)
   );

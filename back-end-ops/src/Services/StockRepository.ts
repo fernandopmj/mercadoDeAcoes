@@ -1,5 +1,5 @@
 import database from "../db/database";
-import { Stock } from "../model/Stock";
+import { Stock } from "../interfaces/IStock";
 
 export default class StockRepository {
   static createStock(stock: Stock, callback: (stock?: Stock) => void): void {
