@@ -1,5 +1,5 @@
-import database from "../db/database";
-import { User } from "../model/User";
+import database from "../utils/database";
+import { User } from "../interfaces/IUser";
 
 class UserRepository {
   static createUser(user: User, callback: (user?: User) => void): void {
@@ -19,13 +19,16 @@ class UserRepository {
     });
   }
 
-  static getUserById(id: number, callback: (user?: User) => void): void {
+  static getUserById(
+    id: number,
+    callback: (user?: User, error?: Error) => void
+  ): void {
     const sql = "SELECT * FROM Users WHERE id = ?";
     const params = [id];
     database.get(sql, params, (err, row) => {
       if (err) {
         console.error("Error getting user by ID:", err);
-        callback();
+        callback(undefined, err);
         return;
       }
       callback(row as User);
