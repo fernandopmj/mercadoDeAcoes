@@ -1,9 +1,11 @@
 import express from "express";
 import cors from "cors";
+import { env } from "./config/env";
 import userRoutes from "./routers/userRoutes";
 import stockRoutes from "./routers/stockRoutes";
 import walletRoutes from "./routers/walletRoutes";
-import { env } from "./config/env";
+import transactionRoutes from "./routers/transactionRoutes";
+import dataInitRoutes from "./routers/dataInitRoutes";
 
 const app = express();
 
@@ -12,6 +14,8 @@ app.use(express.json());
 app.use("/api", userRoutes);
 app.use("/api", stockRoutes);
 app.use("/api", walletRoutes);
+app.use("/api", transactionRoutes);
+app.use("/db", dataInitRoutes);
 
 // Default endpoint /
 app.get("/", (req, res) => {
@@ -22,9 +26,6 @@ app.get("/", (req, res) => {
 app.use((req, res) => {
   res.status(404);
 });
-
-const PORT = process.env.PORT || 4000;
-const HOSTNAME = process.env.HOSTNAME || "http://localhost";
 
 // Iniciar o servidor
 app.listen(env.API_PORT, () => {

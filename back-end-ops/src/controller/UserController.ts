@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import z, { ZodError } from "zod";
+import { ZodError } from "zod";
 import { UserService } from "../services/userService";
 import { createUserSchema } from "../schemas/userSchemas/createUserSchema";
 import { updateUserSchema } from "../schemas/userSchemas/updateUserSchema";
@@ -13,7 +13,6 @@ export class UserController {
         password,
         email,
       });
-      console.log(id);
       res
         .status(201)
         .json({ message: "User has been successfully created with id: " + id });
@@ -82,7 +81,34 @@ export class UserController {
         res.status(404).json({ message: "User not found." });
       }
     } catch (err) {
-      if (err instanceof z.ZodError) {
+      if (err instanceof ZodError) {
+        res.status(422).json({ message: "Invalid data", error: err });
+      } else {
+        res
+          .status(500)
+          .json({ message: "Failed to deactivate user.", error: err });
+      }
+    }
+  }
+
+  static async updateUserBalance(req: Request, res: Response) {
+    try {
+      const { userId, balance } = req.body;
+      const user = await UserService.getUserById(userId);
+      const oldBalance = user.balance;
+      console.log(oldBalance);
+      console.log(user);
+      const success = await UserService.updateUserBalance(
+        userId,
+        oldBalance + balance
+      );
+      if (success) {
+        res.json({ message: "Balace Updated." });
+      } else {
+        res.status(404).json({ message: "User not found." });
+      }
+    } catch (err) {
+      if (err instanceof ZodError) {
         res.status(422).json({ message: "Invalid data", error: err });
       } else {
         res

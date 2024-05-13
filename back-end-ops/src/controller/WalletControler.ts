@@ -1,30 +1,22 @@
 import { Request, Response } from "express";
-import z, { ZodError } from "zod";
-import { WalletRepository } from "../repositories/WalletRepository";
-
-const createWalletSchema = z.object({
-  userId: z.number().int(),
-  stockId: z.number().int(),
-  quantity: z.number().int(),
-});
+import { ZodError } from "zod";
+import { createWalletSchema } from "../schemas/walletSchemas/createWalletSchema";
+import { WalletService } from "../services/walletService";
 
 export class WalletController {
   static async createWallet(req: Request, res: Response) {
     try {
       const { userId, stockId, quantity } = createWalletSchema.parse(req.body);
       console.log(req.body);
-      const { id } = await WalletRepository.createWallet({
+      const { id } = await WalletService.createWallet({
         userId,
         stockId,
         quantity,
       });
 
-      console.log(id);
-      res
-        .status(201)
-        .json({
-          message: "Wallet has been successfully created with id: " + id,
-        });
+      res.status(201).json({
+        message: "Wallet has been successfully created with id: " + id,
+      });
     } catch (err) {
       if (err instanceof ZodError) {
         res.status(201).json({ message: "Invalid data", error: err });

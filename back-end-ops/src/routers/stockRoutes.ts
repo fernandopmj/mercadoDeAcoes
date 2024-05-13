@@ -3,10 +3,10 @@ import StockController from "../controller/StockController";
 
 const router = express.Router();
 
-router.post("/stocks", StockController.createStock);
-router.get("/stocks/:id", StockController.getStockById);
-router.get("/stocks", StockController.getAllStocks);
-router.put("/stocks/update", StockController.updateStockPrice);
-router.delete("/stocks/delete/:id", StockController.deleteStock);
+router.post("/stock", StockController.createStock);
+router.get("/stock/:id", StockController.getStockById);
+router.get("/stock", StockController.getAllStocks);
+router.put("/stock/update", StockController.updateStockPrice);
+router.delete("/stock/delete/:id", StockController.deleteStock);
 
 export default router;

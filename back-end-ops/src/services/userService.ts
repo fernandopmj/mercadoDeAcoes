@@ -1,5 +1,5 @@
 import database from "../utils/database";
-import { BadRequestError, InternalServerError } from "../errors/userErrors";
+import { BadRequestError, InternalServerError } from "../errors/ApiErrors";
 import { User } from "../interfaces/IUser";
 
 export class UserService {
@@ -13,7 +13,6 @@ export class UserService {
       const sql =
         "INSERT INTO Users (username, password, email, status, dateCreated) VALUES (?, ?, ?, ?, ?)";
       const params = [username, password, email, true, dateCreated];
-
       return new Promise((resolve, reject) => {
         database.run(sql, params, function (err) {
           if (err) {
@@ -69,7 +68,6 @@ export class UserService {
   static async updateUser(user: Partial<User>): Promise<boolean> {
     try {
       const { username, password, email, balance, id } = user;
-
       const sql =
         "UPDATE Users SET username = ?, password = ?, email = ?, balance = ? WHERE id = ?";
       const params = [username, password, email, balance, id];
@@ -93,8 +91,33 @@ export class UserService {
       const dateDesactivated = new Date().getTime();
 
       const sql =
-        "UPDATE Users SET status = ?, dateDesactivate = ? WHERE id = ?";
+        "UPDATE Users SET status = ?, dateDesactivated = ? WHERE id = ?";
       const params = [false, dateDesactivated, id];
+
+      await new Promise((resolve, reject) => {
+        database.run(sql, params, function (err) {
+          if (err) {
+            console.log(err.message);
+            reject(new BadRequestError(err.message));
+          } else {
+            resolve(this.changes !== 0);
+          }
+        });
+      });
+
+      return true;
+    } catch (err: any) {
+      throw new InternalServerError(err.message);
+    }
+  }
+
+  static async updateUserBalance(
+    userId: number,
+    newBalance: number
+  ): Promise<boolean> {
+    try {
+      const sql = "UPDATE Users SET balance = ? WHERE id = ?";
+      const params = [newBalance, userId];
 
       await new Promise((resolve, reject) => {
         database.run(sql, params, function (err) {
@@ -105,7 +128,6 @@ export class UserService {
           }
         });
       });
-
       return true;
     } catch (err: any) {
       throw new InternalServerError(err.message);
